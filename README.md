@@ -12,15 +12,15 @@ A busy pet owner needs help staying consistent with pet care. They want an assis
 
 Your job is to design the system first (UML), then implement the logic in Python, then connect it to the Streamlit UI.
 
-## What you will build
+## Features
 
-Your final app should:
-
-- Let a user enter basic owner + pet info
-- Let a user add/edit tasks (duration + priority at minimum)
-- Generate a daily schedule/plan based on constraints and priorities
-- Display the plan clearly (and ideally explain the reasoning)
-- Include tests for the most important scheduling behaviors
+- Add pets with a name, species, and optional breed in the Streamlit UI.
+- Schedule tasks for a pet with a time and once, daily, or weekly recurrence.
+- View household tasks ordered by due date and time with their current status.
+- Filter the schedule by pet and by pending/completed status.
+- Mark tasks complete; daily and weekly tasks create a new pending occurrence for the next day or week.
+- Detect same-time tasks on the same date and show warnings for conflicts within or across pets.
+- Run the terminal demo with `python main.py` to see sorted tasks, conflict warnings, and filtered task lists.
 
 ## Getting started
 
@@ -48,18 +48,6 @@ python main.py
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
-## 🖥️ Sample Output
-
-Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
-
-```
-# e.g.:
-# Daily plan for Biscuit (Golden Retriever):
-#   08:00 — Morning walk (30 min) [priority: high]
-#   09:00 — Feeding (10 min) [priority: high]
-#   ...
-```
-
 ## 🧪 Testing PawPal+
 
 ```bash
@@ -72,10 +60,10 @@ pytest --cov
 
 Sample test output:
 
+```text
+...............                                                          [100%]
+15 passed in 0.01s
 ```
-# Paste your pytest output here
-```
-
 ## 📐 Smarter Scheduling
 
 The scheduler supports the following behaviors:
@@ -87,14 +75,42 @@ The scheduler supports the following behaviors:
 | Conflict detection | `Scheduler.check_conflicts()` | Returns warning messages when two tasks share a due date and time, including conflicts for the same pet or across pets. It does not interrupt schedule generation. |
 | Recurring tasks | `Task.mark_complete()`, `Scheduler.mark_task_complete()` | Completing a daily or weekly task creates a new pending occurrence due one or seven days later, respectively. One-time tasks are only marked complete. |
 
-## 📸 Demo Walkthrough
+## Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+### Using the Streamlit UI
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Run `streamlit run app.py` and open PawPal+ in your browser. The app starts with example pets and tasks.
+2. In **Your Pets**, enter a pet's name, choose a species, optionally add a breed, and select **Add pet**. The pet list refreshes with the new pet.
+3. In **Schedule a Task**, choose a pet, enter a task, select its time and recurrence, then select **Add task**. New tasks are due today by default.
+4. In **Complete a Task**, choose a pending task and select **Mark complete**. A daily or weekly task reports its next due date and adds a new pending occurrence.
+5. Review **Schedule Conflicts** for warnings that identify overlapping tasks, pets, date, and time. Use **Filter by pet** and **Filter by status** to narrow the household schedule.
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+The schedule is ordered by due date and time. The scheduler also detects same-date, same-time conflicts between tasks for one pet or across pets; warnings are informational and do not prevent the schedule from displaying.
+
+### Terminal demo
+
+Run `python main.py` to see an example schedule with deliberately overlapping tasks, a completed recurring task, the resulting next occurrence, and filtered views:
+
+```text
+🐾 SORTED SCHEDULE FOR JORDAN'S HOUSEHOLD
+[2026-11-15 07:30] Mochi -> Morning Walk (PENDING)
+[2026-11-15 07:30] Mochi -> Medication (PENDING)
+[2026-11-15 07:30] Luna -> Breakfast (PENDING)
+[2026-11-15 07:45] Luna -> Morning Feeding (COMPLETED)
+[2026-11-15 14:00] Luna -> Coat Grooming & Brushing (PENDING)
+[2026-11-15 18:30] Mochi -> Evening Walk (PENDING)
+[2026-11-16 07:45] Luna -> Morning Feeding (PENDING)
+
+⚠️ SCHEDULE CONFLICTS
+Warning: Mochi has tasks at the same time (2026-11-15 07:30): Morning Walk and Medication.
+Warning: Mochi and Luna have tasks at the same time (2026-11-15 07:30): Morning Walk and Breakfast.
+Warning: Mochi and Luna have tasks at the same time (2026-11-15 07:30): Medication and Breakfast.
+
+✅ COMPLETED TASKS
+[2026-11-15 07:45] Luna -> Morning Feeding
+
+🐶 MOCHI'S TASKS
+[2026-11-15 07:30] Mochi -> Morning Walk (PENDING)
+[2026-11-15 07:30] Mochi -> Medication (PENDING)
+[2026-11-15 18:30] Mochi -> Evening Walk (PENDING)
+```

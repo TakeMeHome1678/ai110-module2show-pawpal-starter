@@ -1,0 +1,59 @@
+classDiagram
+    class Pet {
+        +String petId
+        +String name
+        +String species
+        +String breed
+        +String specialNeeds
+        +getDailyTasks(date)
+    }
+
+    class CareTask {
+        <<abstract>>
+        +String taskId
+        +String title
+        +DateTime scheduledTime
+        +int durationMinutes
+        +PriorityEnum priority
+        +TaskStatusEnum status
+        +boolean isFlexible
+        +markComplete()
+        +reschedule(newTime)
+    }
+
+    class WalkTask {
+        +String routePreference
+        +float targetDistanceKm
+    }
+
+    class FeedingTask {
+        +String foodType
+        +float portionGrams
+        +boolean isMedicated
+    }
+
+    class GroomingTask {
+        +String groomingType
+        +boolean requiresProfessional
+    }
+
+    class Caregiver {
+        +String caregiverId
+        +String name
+        +List~TimeSlot~ availability
+        +isAvailableAt(timeSlot)
+        +assignTask(CareTask)
+    }
+
+    class TimeSlot {
+        +DateTime startTime
+        +DateTime endTime
+        +DayOfWeek dayOfWeek
+    }
+
+    Pet "1" --> "*" CareTask : requires
+    CareTask <|-- WalkTask
+    CareTask <|-- FeedingTask
+    CareTask <|-- GroomingTask
+    Caregiver "1" --> "*" TimeSlot : has
+    Caregiver "0..1" --> "*" CareTask : assignedTo

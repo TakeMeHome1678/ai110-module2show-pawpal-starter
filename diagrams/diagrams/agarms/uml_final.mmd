@@ -1,0 +1,42 @@
+Code snippet
+classDiagram
+    class Owner {
+        +String name
+        +List~Pet~ pets
+        +__init__(name)
+        +add_pet(pet)
+        +get_pets() List~Pet~
+    }
+
+    class Pet {
+        +String name
+        +String species
+        +String breed
+        +List~Task~ tasks
+        +__init__(name, species, breed)
+        +add_task(task)
+        +get_tasks() List~Task~
+    }
+
+    class Task {
+        +String title
+        +String scheduled_time
+        +String recurrence
+        +String status
+        +String due_date
+        +__init__(title, scheduled_time, recurrence)
+        +mark_complete()
+    }
+
+    class Scheduler {
+        +Owner owner
+        +__init__(owner)
+        +get_schedule() List
+        +mark_task_complete(task) Task
+        +check_conflicts() List
+        +filter_tasks(completed, pet_name) List
+    }
+
+    Owner "1" *-- "*" Pet : manages
+    Pet "1" *-- "*" Task : owns
+    Scheduler "1" --> "1" Owner : orchestrates
